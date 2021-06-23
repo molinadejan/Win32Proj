@@ -21,7 +21,6 @@ public:
 	void Update() override;
 	void Collision(RECT rect) override;
 	void Collision(Shape2D* other) override;
-
 	void Draw(HDC hdc) override;
 };
 

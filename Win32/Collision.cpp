@@ -127,7 +127,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	static std::vector<Shape2D*> shapes;
-	static const int CIRCLE_MAX_CNT = 10;
+	static const int CIRCLE_MAX_CNT = 20;
 
 	static RECT rect;
 
@@ -164,7 +164,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	break;
 	case WM_SIZE:
 	{
+		// 윈도우 창 크기 저장
 		GetClientRect(hWnd, &rect);
+
+		// 화면 갱신
 		InvalidateRect(hWnd, NULL, true);
 	}
 	break;
@@ -172,20 +175,28 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		switch (wParam)
 		{
+			// 오브젝트위치 갱신 타이머
 			case 1:
+
+				// 도형들의 위치 업데이트
 				for (Shape2D* &shape : shapes)
 					shape->Update();
 
+				// 도형 - 윈도우 창 경계 충돌 체크
 				for (Shape2D* &shape : shapes)
 					shape->Collision(rect);
 
+				// 도형 - 도형 충돌 체크
 				for (int i = 0; i < shapes.size(); ++i)
 					for (int j = i + 1; j < shapes.size(); ++j)
 						shapes[i]->Collision(shapes[j]);
 
 				break;
 
+			// 프레임 갱신 타이머
 			case 2:
+
+				// 화면 갱신
 				InvalidateRect(hWnd, NULL, true);
 				break;
 		}
@@ -195,10 +206,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		if (shapes.size() < CIRCLE_MAX_CNT)
 		{
+			// 새로운 원을 만들고 초기화
 			Circle2D *newCircle = new Circle2D(LOWORD(lParam), HIWORD(lParam), (float)(rand() % 50 + 20));
+			newCircle->SetDir((rand() % 9) - 4.0f, (rand() % 9) - 4.0f);
 
-			newCircle->SetDir((rand() % 5) - 2.0f, (rand() % 5) - 2.0f);
-
+			// 리스트에 추가
 			shapes.push_back(newCircle);
 		}
 	}
@@ -208,6 +220,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		PAINTSTRUCT ps;
 		HDC hdc = BeginPaint(hWnd, &ps);
 
+		// 도형 그리기
 		for (Shape2D* &shape : shapes)
 			shape->Draw(hdc);
 

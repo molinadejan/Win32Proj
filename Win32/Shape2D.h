@@ -6,6 +6,7 @@
 #include <windows.h>
 #include <math.h>
 
+// 좌표 구조체
 struct Point
 {
 	float x, y;
@@ -34,9 +35,16 @@ public:
 	inline void SetDir(float _x, float _y)    { dir = { _x, _y };    }
 	inline void SetMass(float _mass)          { mass = _mass;        }
 
+	// 도형의 위치 갱신
 	virtual void Update()      = 0;
+	
+	// 도형과 윈도우 창 충돌 체크
 	virtual void Collision(RECT rect) = 0;
+
+	// 도형과 다른 도형 충돌 체크
 	virtual void Collision(Shape2D* other) = 0;
+
+	// 도형 그리기
 	virtual void Draw(HDC hdc) = 0;
 };
 
