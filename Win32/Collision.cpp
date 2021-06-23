@@ -127,7 +127,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	static std::vector<Shape2D*> shapes;
-	static const int CIRCLE_MAX_CNT = 20;
+	static const int CIRCLE_MAX_CNT = 50;
 
 	static RECT rect;
 
@@ -207,7 +207,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if (shapes.size() < CIRCLE_MAX_CNT)
 		{
 			// 새로운 원을 만들고 초기화
-			Circle2D *newCircle = new Circle2D(LOWORD(lParam), HIWORD(lParam), (float)(rand() % 50 + 20));
+			Circle2D *newCircle = new Circle2D(LOWORD(lParam), HIWORD(lParam), (float)(20));
 			newCircle->SetDir((rand() % 9) - 4.0f, (rand() % 9) - 4.0f);
 
 			// 리스트에 추가

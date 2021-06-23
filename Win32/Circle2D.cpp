@@ -47,9 +47,9 @@ void Circle2D::Collision(Shape2D* other)
 
 	if (c)
 	{
-		float distance = (float)sqrt(pow(c->GetCenter().x - center.x, 2) + pow(c->GetCenter().y - center.y, 2));
+		distance = (float)sqrt(pow(c->GetCenter().x - center.x, 2) + pow(c->GetCenter().y - center.y, 2));
 
-		if (distance + 0.1f < c->GetRadius() + radius)
+		if (distance  <= c->GetRadius() + radius)
 		{
 			// 노멀 벡터 (원의 중심 - 원의 중심) 의 정규화
 			float nx = (c->GetCenter().x - center.x) / distance;
@@ -76,8 +76,31 @@ void Circle2D::Collision(Shape2D* other)
 			SetDir(tx * dpTan1 + nx * m1, ty * dpTan1 + ny * m1);
 			c->SetDir(tx * dpTan2 + nx * m2, ty * dpTan2 + ny * m2);
 
-			Update();
-			c->Update();
+			// 겹칠 경우 처리
+
+			if (distance < c->GetRadius() + radius)
+				Overlap(other);
+		}
+	}
+}
+
+void Circle2D::Overlap(Shape2D * other)
+{
+	Circle2D *c = dynamic_cast<Circle2D *>(other);
+
+	if (c)
+	{
+		if (distance < radius + c->radius)
+		{
+			float overlap = (distance - radius - c->GetRadius()) * 0.5f;
+
+			center.x -= overlap * (center.x - c->GetCenter().x) / distance;
+			center.y -= overlap * (center.y - c->GetCenter().y) / distance;
+
+			float targetCX = c->GetCenter().x + overlap * (center.x - c->GetCenter().x) / distance;
+			float targetCY = c->GetCenter().y + overlap * (center.y - c->GetCenter().y) / distance;
+		
+			c->SetCenter(targetCX, targetCY);
 		}
 	}
 }

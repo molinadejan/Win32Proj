@@ -9,7 +9,7 @@ class Circle2D : public Shape2D
 {
 private:
 
-	float radius; // 반지름
+	float radius;   // 반지름
 
 public:
 	
@@ -21,6 +21,7 @@ public:
 	void Update() override;
 	void Collision(RECT rect) override;
 	void Collision(Shape2D* other) override;
+	void Overlap(Shape2D* other) override;
 	void Draw(HDC hdc) override;
 };
 
