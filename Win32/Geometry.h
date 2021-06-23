@@ -5,18 +5,27 @@
 #ifndef __GEOMETRY_H__
 #define __GEOMETRY_H__
 
-void DrawGrid(HDC hdc, const POINT &p, int colCnt, int rowCnt, int colGap, int rowGap);
-void DrawCircle(HDC hdc, const POINT &p, int radius);
-void DrawSunflowerByRadius(HDC hdc, const POINT &center, int radius, int leafRadius);
-void DrawSunflowerByCount(HDC hdc, const POINT &center, int radius, int cnt);
-void DrawRectangle(HDC hdc, const POINT &p, int width, int height);
-void DrawStar(HDC hdc, const POINT &center, const int radius, int degree);
+// ÁÂÇ¥ ±¸Á¶Ã¼
+struct Point
+{
+	float x, y;
+};
 
-POINT GetIntersection(const POINT &p1, const POINT &p2, const POINT &p3, const POINT &p4, bool &check);
+void DrawGrid(HDC hdc, const Point &p, int colCnt, int rowCnt, int colGap, int rowGap);
+void DrawCircle(HDC hdc, const Point &p, int radius);
+void DrawSunflowerByRadius(HDC hdc, const Point &center, int radius, int leafRadius);
+void DrawSunflowerByCount(HDC hdc, const Point &center, int radius, int cnt);
+void DrawRectangle(HDC hdc, const Point &p, int width, int height);
+void DrawStar(HDC hdc, const Point &center, const int radius, int degree);
 
-POINT Rotate(const POINT &center, const POINT &p, const double radian);
+Point GetIntersection(const Point &p1, const Point &p2, const Point &p3, const Point &p4, bool &check);
 
-double Rad2Deg(const double radian);
-double Deg2Rad(const double degree);
+Point Rotate(const Point &center, const Point &p, const float radian);
+
+float Rad2Deg(const float radian);
+float Deg2Rad(const float degree);
+
+float GetDistance(const Point &p1, const Point &p2);
+float GetDistance(float p1x, float p1y, float p2x, float p2y);
 
 #endif // !__GEOMETRY_H__

@@ -152,6 +152,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Circle2D.h" />
+    <ClInclude Include="Line2D.h" />
+    <ClInclude Include="Rectangle2D.h" />
     <ClInclude Include="Shape2D.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Geometry.h" />
@@ -165,6 +167,7 @@
     <ClCompile Include="Collision.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="Line2D.cpp" />
     <ClCompile Include="Shape2D.cpp" />
   </ItemGroup>
   <ItemGroup>

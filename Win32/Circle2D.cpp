@@ -1,15 +1,4 @@
 #include "Circle2D.h"
-#include <DirectXMath.h>
-#include <DirectXPackedVector.h>
-
-using namespace DirectX;
-using namespace DirectX::PackedVector;
-
-void Circle2D::Update()
-{
-	center.x += dir.x;
-	center.y += dir.y;
-}
 
 void Circle2D::Collision(RECT rect)
 {
@@ -43,6 +32,12 @@ void Circle2D::Collision(RECT rect)
 
 void Circle2D::Collision(Shape2D* other)
 {
+	if (type > other->GetType())
+	{
+		other->Collision(this);
+		return;
+	}
+
 	Circle2D *c = dynamic_cast<Circle2D *>(other);
 
 	if (c)
@@ -82,6 +77,8 @@ void Circle2D::Collision(Shape2D* other)
 				Overlap(other);
 		}
 	}
+
+
 }
 
 void Circle2D::Overlap(Shape2D * other)

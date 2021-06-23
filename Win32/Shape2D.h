@@ -5,11 +5,15 @@
 
 #include <windows.h>
 #include <math.h>
+#include "Geometry.h"
 
-// 좌표 구조체
-struct Point
+enum SHAPE
 {
-	float x, y;
+	NONE,
+	LINE,
+	CIRCLE,
+	RECTANGLE,
+	STAR,
 };
 
 class Shape2D
@@ -20,10 +24,10 @@ protected:
 	Point  dir;      // 이동방향
 	float  mass;     // 도형 질량 (아직 미적용)
 	float  distance; // 다른 도형과의 거리를 저장할 변수
-	int    type;     // 도형 타입
+	SHAPE  type;     // 도형 타입
 
-	Shape2D(int _type) : center({ 0, 0 }), dir({ 0, 0 }), mass(1), distance(0), type(_type) { }
-	Shape2D(float _x, float _y, float _mass, int _type) : center({ _x, _y }), dir({ 0, 0 }), mass(_mass), distance(0), type(_type) { }
+	//Shape2D(SHAPE _type) : center({ 0, 0 }), dir({ 0, 0 }), mass(1), distance(0), type(_type) { }
+	Shape2D(float _x, float _y, float _mass, SHAPE _type) : center({ _x, _y }), dir({ 0, 0 }), mass(_mass), distance(0), type(_type) { }
 
 public:
 
@@ -37,7 +41,7 @@ public:
 	inline void SetMass(float _mass)          { mass = _mass;        }
 
 	// 도형의 위치 갱신
-	virtual void Update()      = 0;
+	virtual void Update() { center.x += dir.x; center.y += dir.y; }
 	
 	// 도형과 윈도우 창 충돌 체크
 	virtual void Collision(RECT rect) = 0;

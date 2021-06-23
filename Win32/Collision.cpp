@@ -3,8 +3,9 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "framework.h"
 #include "Win32.h"
-#include "Geometry.h"
+
 #include "Circle2D.h"
+#include "Line2D.h"
 
 #include <vector>
 
@@ -127,7 +128,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	static std::vector<Shape2D*> shapes;
-	static const int CIRCLE_MAX_CNT = 50;
+	static const int SHAPE_MAX_CNT = 50;
 
 	static RECT rect;
 
@@ -156,10 +157,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		GetClientRect(hWnd, &rect);
 
 		// 오브젝트 위치 갱신을 위한 타이머
-		SetTimer(hWnd, 1, 8, NULL);
+		SetTimer(hWnd, 1, 16, NULL);
 
 		// 프레임 갱신을 위한 타이머
-		SetTimer(hWnd, 2, 16, NULL);
+		SetTimer(hWnd, 2, 32, NULL);
 	}
 	break;
 	case WM_SIZE:
@@ -204,14 +205,32 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	break;
 	case WM_LBUTTONDOWN:
 	{
-		if (shapes.size() < CIRCLE_MAX_CNT)
+		if (shapes.size() < SHAPE_MAX_CNT)
 		{
 			// 새로운 원을 만들고 초기화
-			Circle2D *newCircle = new Circle2D(LOWORD(lParam), HIWORD(lParam), (float)(20));
-			newCircle->SetDir((rand() % 9) - 4.0f, (rand() % 9) - 4.0f);
+			Circle2D *newCircle = new Circle2D(LOWORD(lParam), HIWORD(lParam), (float)(100));
+
+			float speed = 21;
+
+			//newCircle->SetDir((rand() % 9) - 4.0f, (rand() % 9) - 4.0f);
+			newCircle->SetDir((rand() % (int)speed) - speed / 2, (rand() % (int)speed) - speed / 2);
 
 			// 리스트에 추가
 			shapes.push_back(newCircle);
+		}
+	}
+	break;
+	case WM_RBUTTONDOWN:
+	{
+		if (shapes.size() < SHAPE_MAX_CNT)
+		{
+			// 새로운 직선을 만들고 초기화
+			Line2D *newLine = new Line2D(LOWORD(lParam), HIWORD(lParam), 100);
+			newLine->SetDir((rand() % 9) - 4.0f, (rand() % 9) - 4.0f);
+			newLine->SetRotationalSpeedDegree((float)(rand() % 2 + 1));
+
+			// 리스트에 추가
+			shapes.push_back(newLine);
 		}
 	}
 	break;
