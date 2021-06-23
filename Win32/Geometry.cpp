@@ -3,6 +3,11 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 
+Point operator+(const Point& p1, const Point& p2)
+{
+	return { p1.x + p2.x, p1.y + p2.y };
+}
+
 void DrawGrid(HDC hdc, const Point &p, int colCnt, int rowCnt, int colGap, int rowGap)
 {
 	int bottom = p.y + rowCnt * rowGap;

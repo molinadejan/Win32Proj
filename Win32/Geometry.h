@@ -11,6 +11,8 @@ struct Point
 	float x, y;
 };
 
+Point operator+(const Point& p1, const Point& p2);
+
 void DrawGrid(HDC hdc, const Point &p, int colCnt, int rowCnt, int colGap, int rowGap);
 void DrawCircle(HDC hdc, const Point &p, int radius);
 void DrawSunflowerByRadius(HDC hdc, const Point &center, int radius, int leafRadius);

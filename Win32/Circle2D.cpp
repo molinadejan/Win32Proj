@@ -50,35 +50,14 @@ void Circle2D::Collision(Shape2D* other)
 			float nx = (c->GetCenter().x - center.x) / distance;
 			float ny = (c->GetCenter().y - center.y) / distance;
 
-			// 접선 벡터 
-			float tx = -ny;
-			float ty = nx;
-
-			// dir 내적 접선 벡터 
-			float dpTan1 = dir.x * tx + dir.y * ty;
-			float dpTan2 = c->GetDir().x * tx + c->GetDir().y * ty;
-
-			// dir 내적 노멀 벡터
-			float dpNorm1 = dir.x * nx + dir.y * ny;
-			float dpNorm2 = c->GetDir().x * nx + c->GetDir().y * ny;
-
-			//float m1 = (dpNorm1 * (mass - c->GetMass()) + 2.0f * c->GetMass() * dpNorm2) / (mass + c->GetMass());
-			//float m2 = (dpNorm2 * (c->GetMass() - mass) + 2.0f * mass * dpNorm1) / (mass + c->GetMass());
-
-			float m1 = dpNorm2;
-			float m2 = dpNorm1;
-
-			SetDir(tx * dpTan1 + nx * m1, ty * dpTan1 + ny * m1);
-			c->SetDir(tx * dpTan2 + nx * m2, ty * dpTan2 + ny * m2);
+			// 노말과 접선 벡터를 인자로
+			Bounce({ nx, ny }, {-ny, nx}, other);
 
 			// 겹칠 경우 처리
-
 			if (distance < c->GetRadius() + radius)
 				Overlap(other);
 		}
 	}
-
-
 }
 
 void Circle2D::Overlap(Shape2D * other)

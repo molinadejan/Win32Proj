@@ -3,7 +3,7 @@
 #define __CIRCLE2D_H__
 
 #include "Shape2D.h"
-#include "Shape2D.cpp"
+//#include "Shape2D.cpp"
 
 class Circle2D : public Shape2D
 {

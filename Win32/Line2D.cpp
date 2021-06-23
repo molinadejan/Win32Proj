@@ -64,60 +64,95 @@ void Line2D::Collision(RECT rect)
 	}
 }
 
+// 충돌하는 접점의 작용 힘도 생각
+
 void Line2D::Collision(Shape2D * other)
 {
 	Circle2D *c = dynamic_cast<Circle2D *>(other);
 	
 	if (c)
 	{
-		bool isCollision = false;
-
-		if (GetDistance(c->GetCenter(), start) <= c->GetRadius() || GetDistance(c->GetCenter(), end) <= c->GetRadius())
-			isCollision = true;
-
-		// 직선 벡터
-		float lx = end.x - start.x;
-		float ly = end.y - start.y;
-
-		//// 한 점(start)에서 원의 중심까지의 벡터
-		//float px = c->GetCenter().x - (start.x + center.x);
-		//float py = c->GetCenter().y - (start.y + center.y);
-
-		float lineLen = sqrt(lx * lx + ly * ly);
-
-		//float dot = (lx * px + ly * py) / lineLen * lineLen;
-
-		//if (dot >= 0 && dot <= lineLen)
-		//{
-		//	float contactX = start.x + center.x + dot * lx;
-		//	float contactY = start.y + center.y + dot * ly;
-
-		//	distance = GetDistance(c->GetCenter(), { contactX, contactY });
-		//}
-		
-		if (isCollision /*|| distance <= c->GetRadius()*/)
+		if ((distance = GetDistance(c->GetCenter(), start + center)) <= c->GetRadius())
 		{
-			// 접선 벡터 
-			float tx = lx / lineLen;
-			float ty = ly / lineLen;
+			float nx = (c->GetCenter().x - (start.x + center.x)) / distance;
+			float ny = (c->GetCenter().y - (start.y + center.y)) / distance;
 
-			// 노멀 벡터 접선과 수직
-			float nx = -ty;
-			float ny = tx;
+			Bounce({ nx, ny }, { -ny, nx }, other);
 
-			// dir 내적 접선 벡터 
-			float dpTan1 = dir.x * tx + dir.y * ty;
-			float dpTan2 = c->GetDir().x * tx + c->GetDir().y * ty;
+			if (distance < c->GetRadius())
+			{
+				float overlap = (distance - c->GetRadius()) * 0.5f;
 
-			// dir 내적 노멀 벡터
-			float dpNorm1 = dir.x * nx + dir.y * ny;
-			float dpNorm2 = c->GetDir().x * nx + c->GetDir().y * ny;
+				center.x -= overlap * (start.x + center.x - c->GetCenter().x) / distance;
+				center.y -= overlap * (start.y + center.y - c->GetCenter().y) / distance;
 
-			float m1 = dpNorm2;
-			float m2 = dpNorm1;
+				float targetCX = c->GetCenter().x + overlap * (start.x + center.x - c->GetCenter().x) / distance;
+				float targetCY = c->GetCenter().y + overlap * (start.y + center.y - c->GetCenter().y) / distance;
 
-			SetDir(tx * dpTan1 + nx * m1, ty * dpTan1 + ny * m1);
-			c->SetDir(tx * dpTan2 + nx * m2, ty * dpTan2 + ny * m2);
+				c->SetCenter(targetCX, targetCY);
+			}
+
+			contact = start + center;
+		}
+		else if ((distance = GetDistance(c->GetCenter(), end + center)) <= c->GetRadius())
+		{
+			float nx = (c->GetCenter().x - (end.x + center.x)) / distance;
+			float ny = (c->GetCenter().y - (end.y + center.y)) / distance;
+
+			Bounce({ nx, ny }, { -ny, nx }, other);
+
+			if (distance < c->GetRadius())
+			{
+				float overlap = (distance - c->GetRadius()) * 0.5f;
+
+				center.x -= overlap * (end.x + center.x - c->GetCenter().x) / distance;
+				center.y -= overlap * (end.y + center.y - c->GetCenter().y) / distance;
+
+				float targetCX = c->GetCenter().x + overlap * (end.x + center.x - c->GetCenter().x) / distance;
+				float targetCY = c->GetCenter().y + overlap * (end.y + center.y - c->GetCenter().y) / distance;
+
+				c->SetCenter(targetCX, targetCY);
+			}
+
+			contact = end + center;
+		}
+		else
+		{
+			float ux = end.x - start.x;
+			float uy = end.y - start.y;
+
+			float uLen = sqrt(ux * ux + uy * uy);
+
+			float scx = c->GetCenter().x - (start.x + center.x);
+			float scy = c->GetCenter().y - (start.y + center.y);
+
+			float dotProj = (ux * scx + uy * scy) / (uLen * uLen);
+
+			float pointX = start.x + center.x + dotProj * ux;
+			float pointY = start.y + center.y + dotProj * uy;
+
+			contact = { pointX, pointY };
+
+			if ((distance = GetDistance(c->GetCenter(), { pointX, pointY })) <= c->GetRadius())
+			{
+				float nx = (c->GetCenter().x - pointX) / distance;
+				float ny = (c->GetCenter().y - pointY) / distance;
+
+				Bounce({ nx, ny }, { -ny, nx }, other);
+
+				/*if (distance < c->GetRadius())
+				{
+					float overlap = (distance - c->GetRadius()) * 0.5f;
+
+					center.x -= overlap * (pointX - c->GetCenter().x) / distance;
+					center.y -= overlap * (pointY - c->GetCenter().y) / distance;
+
+					float targetCX = c->GetCenter().x + overlap * (pointX - c->GetCenter().x) / distance;
+					float targetCY = c->GetCenter().y + overlap * (pointY - c->GetCenter().y) / distance;
+
+					c->SetCenter(targetCX, targetCY);
+				}*/
+			}
 		}
 	}
 }
@@ -132,6 +167,15 @@ void Line2D::Draw(HDC hdc)
 
 	MoveToEx(hdc, sx, sy, NULL);
 	LineTo(hdc, ex, ey);
+
+	Ellipse(hdc,
+		(int)floor(contact.x - 10 + 0.5f),
+		(int)floor(contact.y - 10 + 0.5f),
+		(int)floor(contact.x + 10 + 0.5f),
+		(int)floor(contact.y + 10 + 0.5f)
+	);
+
+	DrawRectangle(hdc, center, 10, 10);
 }
 
 void Line2D::Overlap(Shape2D * other)

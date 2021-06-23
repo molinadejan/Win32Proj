@@ -18,6 +18,8 @@ private:
 	// 끝 (중심 기준 벡터)
 	Point start, end;
 
+	Point contact;
+
 public:
 
 	Line2D(float cx, float cy, float length);

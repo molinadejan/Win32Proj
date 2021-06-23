@@ -54,6 +54,8 @@ public:
 
 	// °ãÄ¥¶§ Ã³¸®
 	virtual void Overlap(Shape2D* other) = 0;
+
+	void Bounce(const Point& normal, const Point& tangent, Shape2D* other);
 };
 
 #endif // !__CIRCLE2D_H__
