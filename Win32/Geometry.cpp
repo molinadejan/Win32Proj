@@ -37,8 +37,8 @@ void DrawSunflowerByRadius(HDC hdc, const Point &center, int radius, int leafRad
 {
 	DrawCircle(hdc, center, radius);
 
-	float angleRadian = 2 * asin((float)leafRadius / (radius + leafRadius));
-	float angle = Rad2Deg(angleRadian);
+	double angleRadian = 2 * asin((double)leafRadius / (radius + leafRadius));
+	double angle = Rad2Deg(angleRadian);
 
 	Point tmpP = { center.x, center.y - radius - leafRadius };
 
@@ -56,17 +56,17 @@ void DrawSunflowerByCount(HDC hdc, const Point &center, int radius, int cnt)
 
 	DrawCircle(hdc, center, radius);
 
-	float angle = 360.0 / cnt;
-	float angleRadian = Deg2Rad(angle);
+	double angle = 360.0 / cnt;
+	double angleRadian = Deg2Rad(angle);
 
 	//double _leafRadius = radius * sqrt(2 - 2 * cos(angleRadian)) / (2 - sqrt(2 - 2 * cos(angleRadian)));
-	float _leafRadius = radius * sin(angleRadian / 2) / (1 - sin(angleRadian / 2));
+	double _leafRadius = radius * sin(angleRadian / 2) / (1 - sin(angleRadian / 2));
 
 	int leafRadius = (int)floor(_leafRadius + 0.5);
 
 	Point tmpP = { center.x, center.y - radius - leafRadius };
 
-	for (float i = 0; i < 360; i += angle)
+	for (double i = 0; i < 360; i += angle)
 	{
 		DrawCircle(hdc, tmpP, leafRadius);
 		tmpP = Rotate(center, tmpP, angleRadian);
@@ -80,7 +80,7 @@ void DrawRectangle(HDC hdc, const Point &p, int width, int height)
 
 void DrawStar(HDC hdc, const Point &center, const int radius, int degree)
 {
-	float angleRadian = Deg2Rad(72);
+	double angleRadian = Deg2Rad(72);
 
 	Point tip[10] = { {center.x, center.y - radius} };
 
@@ -94,7 +94,7 @@ void DrawStar(HDC hdc, const Point &center, const int radius, int degree)
 
 	if (degree != 0)
 	{
-		float angleRadian = Deg2Rad(degree);
+		double angleRadian = Deg2Rad(degree);
 
 		for (Point &p : tip)
 			p = Rotate(center, p, angleRadian);
@@ -113,7 +113,7 @@ void DrawStar(HDC hdc, const Point &center, const int radius, int degree)
 
 Point GetIntersection(const Point &p1, const Point &p2, const Point &p3, const Point &p4, bool &check)
 {
-	float slopeDiff = (p1.x - p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x - p4.x);
+	double slopeDiff = (p1.x - p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x - p4.x);
 
 	if (slopeDiff == 0)
 	{
@@ -121,8 +121,8 @@ Point GetIntersection(const Point &p1, const Point &p2, const Point &p3, const P
 		return { 0, 0 };
 	}
 
-	float tmpX = (p1.x * p2.y - p1.y * p2.x) * (p3.x - p4.x) - (p1.x - p2.x) * (p3.x * p4.y - p3.y * p4.x);
-	float tmpY = (p1.x * p2.y - p1.y * p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x * p4.y - p3.y * p4.x);
+	double tmpX = (p1.x * p2.y - p1.y * p2.x) * (p3.x - p4.x) - (p1.x - p2.x) * (p3.x * p4.y - p3.y * p4.x);
+	double tmpY = (p1.x * p2.y - p1.y * p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x * p4.y - p3.y * p4.x);
 
 	tmpX /= slopeDiff;
 	tmpY /= slopeDiff;
@@ -130,32 +130,32 @@ Point GetIntersection(const Point &p1, const Point &p2, const Point &p3, const P
 	return { tmpX, tmpY };
 }
 
-Point Rotate(const Point &center, const Point &p, const float radian)
+Point Rotate(const Point &center, const Point &p, const double radian)
 {
 	Point tmp = { p.x - center.x, p.y - center.y };
 
-	float tmpX = cos(radian) * tmp.x - sin(radian) * tmp.y;
-	float tmpY = sin(radian) * tmp.x + cos(radian) * tmp.y;
+	double tmpX = cos(radian) * tmp.x - sin(radian) * tmp.y;
+	double tmpY = sin(radian) * tmp.x + cos(radian) * tmp.y;
 
-	return {tmpX, tmpY};
+	return { tmpX + center.x, tmpY + center.y };
 }
 
-float Rad2Deg(const float radian)
+double Rad2Deg(const double radian)
 {
 	return radian * 180.0f / M_PI;
 }
 
-float Deg2Rad(const float degree)
+double Deg2Rad(const double degree)
 {
 	return degree * M_PI / 180.0f;
 }
 
-float GetDistance(const Point & p1, const Point & p2)
+double GetDistance(const Point & p1, const Point & p2)
 {
 	return sqrt(pow(p1.x - p2.x, 2) + pow(p1.y - p2.y, 2));
 }
 
-float GetDistance(float p1x, float p1y, float p2x, float p2y)
+double GetDistance(double p1x, double p1y, double p2x, double p2y)
 {
 	return sqrt(pow(p1x - p2x, 2) + pow(p1y - p2y, 2));
 }

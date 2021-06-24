@@ -8,7 +8,7 @@
 // ÁÂÇ¥ ±¸Á¶Ã¼
 struct Point
 {
-	float x, y;
+	double x, y;
 };
 
 Point operator+(const Point& p1, const Point& p2);
@@ -22,12 +22,12 @@ void DrawStar(HDC hdc, const Point &center, const int radius, int degree);
 
 Point GetIntersection(const Point &p1, const Point &p2, const Point &p3, const Point &p4, bool &check);
 
-Point Rotate(const Point &center, const Point &p, const float radian);
+Point Rotate(const Point &center, const Point &p, const double radian);
 
-float Rad2Deg(const float radian);
-float Deg2Rad(const float degree);
+double Rad2Deg(const double radian);
+double Deg2Rad(const double degree);
 
-float GetDistance(const Point &p1, const Point &p2);
-float GetDistance(float p1x, float p1y, float p2x, float p2y);
+double GetDistance(const Point &p1, const Point &p2);
+double GetDistance(double p1x, double p1y, double p2x, double p2y);
 
 #endif // !__GEOMETRY_H__

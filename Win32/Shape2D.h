@@ -12,8 +12,8 @@ enum SHAPE
 	NONE,
 	LINE,
 	CIRCLE,
-	RECTANGLE,
 	STAR,
+	RECTANGLE,
 };
 
 class Shape2D
@@ -22,23 +22,23 @@ protected:
 	
 	Point  center;   // 중심 좌표
 	Point  dir;      // 이동방향
-	float  mass;     // 도형 질량 (아직 미적용)
-	float  distance; // 다른 도형과의 거리를 저장할 변수
+	double mass;     // 도형 질량 (아직 미적용)
+	double  distance; // 다른 도형과의 거리를 저장할 변수
 	SHAPE  type;     // 도형 타입
 
 	//Shape2D(SHAPE _type) : center({ 0, 0 }), dir({ 0, 0 }), mass(1), distance(0), type(_type) { }
-	Shape2D(float _x, float _y, float _mass, SHAPE _type) : center({ _x, _y }), dir({ 0, 0 }), mass(_mass), distance(0), type(_type) { }
+	Shape2D(double _x, double _y, double _mass, SHAPE _type) : center({ _x, _y }), dir({ 0, 0 }), mass(_mass), distance(0), type(_type) { }
 
 public:
 
 	inline Point  GetCenter() const { return center; }
 	inline Point  GetDir()    const { return dir;    }
-	inline float  GetMass()   const { return mass;   }
+	inline double  GetMass()   const { return mass;   }
 	inline int    GetType()   const { return type;   }
 
-	inline void SetCenter(float _x, float _y) { center = { _x, _y }; }
-	inline void SetDir(float _x, float _y)    { dir = { _x, _y };    }
-	inline void SetMass(float _mass)          { mass = _mass;        }
+	inline void SetCenter(double _x, double _y) { center = { _x, _y }; }
+	inline void SetDir(double _x, double _y)    { dir = { _x, _y };    }
+	inline void SetMass(double _mass)          { mass = _mass;        }
 
 	// 도형의 위치 갱신
 	virtual void Update() { center.x += dir.x; center.y += dir.y; }

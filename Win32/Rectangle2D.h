@@ -11,17 +11,24 @@ class Rectangle2D : public Shape2D
 protected:
 
 	// 회전 속도 (degree)
-	float rsDegree;
+	double rsDegree;
 
 	// 회전 속도 (radian)
-	float rsRadian;
+	double rsRadian;
 
+	// 좌상 - 우상 - 우하 - 좌하
+	Point points[4];
+
+	double len;
 public:
 
 	//Rectangle2D(SHAPE _type) : Shape2D(_type), rotate(0) { } 
-	Rectangle2D(float _x, float _y, float _len) : Shape2D(_x, _y, 1, SHAPE::RECTANGLE), rsDegree(0), rsRadian(0) { }
+	Rectangle2D(double _x, double _y, double _len);
 
-	void SetRotationalSpeedDegree(float _rs);
+	Point GetPoint(int idx) { return points[idx]; }
+	double GetLen() { return len; }
+
+	void SetRotationalSpeedDegree(double _rs);
 
 	void Update() override;
 	void Collision(RECT rect) override;

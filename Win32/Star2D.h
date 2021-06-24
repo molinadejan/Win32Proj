@@ -10,17 +10,17 @@ class Star2D : public Circle2D
 private:
 
 	// 회전 속도 (degree)
-	float rsDegree;
+	double rsDegree;
 	// 회전 속도 (radian)
-	float rsRadian;
+	double rsRadian;
 
 	Point points[10];
 
 public:
 
-	Star2D(float _x, float _y, float _r);
+	Star2D(double _x, double _y, double _r);
 
-	void SetRotationalSpeedDegree(float _rs);
+	void SetRotationalSpeedDegree(double _rs);
 
 	void Update() override;
 	void Draw(HDC hdc) override;

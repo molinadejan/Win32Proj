@@ -7,6 +7,7 @@
 #include "Circle2D.h"
 #include "Star2D.h"
 #include "Line2D.h"
+#include "Rectangle2D.h"
 
 #include <vector>
 
@@ -130,6 +131,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	static std::vector<Shape2D*> shapes;
 	static const int SHAPE_MAX_CNT = 50;
+	static int mode;
 
 	static RECT rect;
 
@@ -158,10 +160,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		GetClientRect(hWnd, &rect);
 
 		// 오브젝트 위치 갱신을 위한 타이머
-		SetTimer(hWnd, 1, 32, NULL);
+		SetTimer(hWnd, 1, 16, NULL);
 
 		// 프레임 갱신을 위한 타이머
 		SetTimer(hWnd, 2, 32, NULL);
+
+		mode = 0;
 	}
 	break;
 	case WM_SIZE:
@@ -204,34 +208,54 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		}
 	}
 	break;
+	case WM_KEYDOWN:
+	{
+		// 숫자 1, 2, 3
+		if (wParam == 0x31)
+			mode = 1;
+		else if (wParam == 0x32)
+			mode = 2;
+		else if (wParam == 0x33)
+			mode = 3;
+	}
+	break;
 	case WM_LBUTTONDOWN:
 	{
 		if (shapes.size() < SHAPE_MAX_CNT)
 		{
-			// 새로운 원을 만들고 초기화
-			Circle2D *newCircle = new Circle2D(LOWORD(lParam), HIWORD(lParam), (float)(rand() % 100 + 20));
+			if (mode == 1)
+			{
+				// 새로운 원을 만들고 초기화
+				Circle2D *newCircle = new Circle2D(LOWORD(lParam), HIWORD(lParam), (double)(rand() % 10 + 20));
 
-			float speed = 5;
+				double speed = 15;
 
-			//newCircle->SetDir((rand() % 9) - 4.0f, (rand() % 9) - 4.0f);
-			newCircle->SetDir((rand() % (int)speed) - speed / 2, (rand() % (int)speed) - speed / 2);
+				//newCircle->SetDir((rand() % 9) - 4.0f, (rand() % 9) - 4.0f);
+				newCircle->SetDir((rand() % (int)speed) - speed / 2, (rand() % (int)speed) - speed / 2);
 
-			// 리스트에 추가
-			shapes.push_back(newCircle);
-		}
-	}
-	break;
-	case WM_RBUTTONDOWN:
-	{
-		if (shapes.size() < SHAPE_MAX_CNT)
-		{
-			Star2D *newStar = new Star2D(LOWORD(lParam), HIWORD(lParam), (float)(rand() % 100 + 20));
-			float speed = 5;
+				// 리스트에 추가
+				shapes.push_back(newCircle);
+			}
+			else if (mode == 2)
+			{
+				Rectangle2D *newRec = new Rectangle2D(LOWORD(lParam), HIWORD(lParam), (double)(rand() % 100 + 50));
 
-			newStar->SetDir((rand() % (int)speed) - speed / 2, (rand() % (int)speed) - speed / 2);
-			newStar->SetRotationalSpeedDegree((float)(rand() % 2 - 1));
+				double speed = 15;
+				newRec->SetDir((rand() % (int)speed) - speed / 2, (rand() % (int)speed) - speed / 2);
+				//newRec->SetRotationalSpeedDegree((double)(rand() % 2 + 1));
 
-			shapes.push_back(newStar);
+				shapes.push_back(newRec);
+			}
+			else if (mode == 3)
+			{
+				Star2D *newStar = new Star2D(LOWORD(lParam), HIWORD(lParam), (double)(rand() % 10 + 20));
+				double speed = 15;
+
+				newStar->SetDir((rand() % (int)speed) - speed / 2, (rand() % (int)speed) - speed / 2);
+				newStar->SetRotationalSpeedDegree((double)(rand() % 2 - 1));
+
+				shapes.push_back(newStar);
+			}
 		}
 	}
 	break;

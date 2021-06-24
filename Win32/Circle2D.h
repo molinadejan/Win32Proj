@@ -8,14 +8,14 @@ class Circle2D : public Shape2D
 {
 private:
 
-	float radius;   // 반지름
+	double radius;   // 반지름
 
 public:
 	
 	//Circle2D() : Shape2D(SHAPE::CIRCLE), radius(1) { }
-	Circle2D(float _x, float _y, float _r, SHAPE _shape = SHAPE::CIRCLE) : Shape2D(_x, _y, 1, _shape), radius(_r) { }
+	Circle2D(double _x, double _y, double _r, SHAPE _shape = SHAPE::CIRCLE) : Shape2D(_x, _y, 1, _shape), radius(_r) { }
 
-	inline float GetRadius() const { return radius; }
+	inline double GetRadius() const { return radius; }
 
 	//void Update() override;
 	void Collision(RECT rect) override;

@@ -1,10 +1,10 @@
 #include "Star2D.h"
 #include "Geometry.h"
 
-Star2D::Star2D(float _x, float _y, float _r)
+Star2D::Star2D(double _x, double _y, double _r)
 	: Circle2D(_x, _y, _r, SHAPE::STAR), rsDegree(0), rsRadian(0)
 {
-	float angleRadian = Deg2Rad(72);
+	double angleRadian = Deg2Rad(72);
 
 	points[0] = { 0.0f, -GetRadius() };
 
@@ -19,7 +19,7 @@ Star2D::Star2D(float _x, float _y, float _r)
 		points[i] = Rotate({ 0,0 }, points[i - 2], angleRadian);
 }
 
-void Star2D::SetRotationalSpeedDegree(float _rs)
+void Star2D::SetRotationalSpeedDegree(double _rs)
 {
 	rsDegree = _rs;
 	rsRadian = Deg2Rad(_rs);
