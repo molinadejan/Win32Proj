@@ -32,7 +32,7 @@ void Rectangle2D::Collision(RECT rect)
 		if (points[i].x + center.x < 0)
 		{
 			dir.x *= -1;
-			center.x = fabsf(points[i].x);
+			center.x = fabs(points[i].x);
 		}
 
 		if (points[i].x + center.x > rect.right)
@@ -44,7 +44,7 @@ void Rectangle2D::Collision(RECT rect)
 		if (points[i].y + center.y < 0)
 		{
 			dir.y *= -1;
-			center.y = fabsf(points[i].y);
+			center.y = fabs(points[i].y);
 		}
 
 		if (points[i].y + center.y > rect.bottom)

@@ -197,6 +197,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					for (int j = i + 1; j < shapes.size(); ++j)
 						shapes[i]->Collision(shapes[j]);
 
+				// 도형 - 도형 Overlap
+				for (int i = 0; i < shapes.size(); ++i)
+					for (int j = 0; j < shapes.size(); ++j)
+						if (shapes[i] != shapes[j])
+							shapes[i]->Overlap(shapes[j]);
+
 				break;
 
 			// 프레임 갱신 타이머
@@ -225,32 +231,28 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			if (mode == 1)
 			{
-				// 새로운 원을 만들고 초기화
-				Circle2D *newCircle = new Circle2D(LOWORD(lParam), HIWORD(lParam), (double)(rand() % 10 + 20));
+				Circle2D *newCircle = new Circle2D(LOWORD(lParam), HIWORD(lParam), (double)(25));
 
-				double speed = 15;
-
-				//newCircle->SetDir((rand() % 9) - 4.0f, (rand() % 9) - 4.0f);
+				double speed = 11;
 				newCircle->SetDir((rand() % (int)speed) - speed / 2, (rand() % (int)speed) - speed / 2);
 
-				// 리스트에 추가
 				shapes.push_back(newCircle);
 			}
 			else if (mode == 2)
 			{
-				Rectangle2D *newRec = new Rectangle2D(LOWORD(lParam), HIWORD(lParam), (double)(rand() % 100 + 50));
+				Rectangle2D *newRec = new Rectangle2D(LOWORD(lParam), HIWORD(lParam), (double)(50));
 
-				double speed = 15;
+				double speed = 11;
 				newRec->SetDir((rand() % (int)speed) - speed / 2, (rand() % (int)speed) - speed / 2);
-				//newRec->SetRotationalSpeedDegree((double)(rand() % 2 + 1));
+				newRec->SetRotationalSpeedDegree((double)(rand() % 5 + 1));
 
 				shapes.push_back(newRec);
 			}
 			else if (mode == 3)
 			{
-				Star2D *newStar = new Star2D(LOWORD(lParam), HIWORD(lParam), (double)(rand() % 10 + 20));
-				double speed = 15;
+				Star2D *newStar = new Star2D(LOWORD(lParam), HIWORD(lParam), (double)(rand() % 50 + 10));
 
+				double speed = 11;
 				newStar->SetDir((rand() % (int)speed) - speed / 2, (rand() % (int)speed) - speed / 2);
 				newStar->SetRotationalSpeedDegree((double)(rand() % 2 - 1));
 
