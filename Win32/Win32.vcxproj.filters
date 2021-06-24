@@ -36,10 +36,10 @@
     <ClInclude Include="Rectangle2D.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Line2D.h">
+    <ClInclude Include="Win32.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
-    <ClInclude Include="Win32.h">
+    <ClInclude Include="Star2D.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
   </ItemGroup>
@@ -56,7 +56,7 @@
     <ClCompile Include="Shape2D.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
-    <ClCompile Include="Line2D.cpp">
+    <ClCompile Include="Star2D.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

@@ -16,16 +16,18 @@ protected:
 	// 회전 속도 (radian)
 	float rsRadian;
 
-
-
 public:
 
 	//Rectangle2D(SHAPE _type) : Shape2D(_type), rotate(0) { } 
-	Rectangle2D(float _x, float _y, float _mass, float _rs) : Shape2D(_x, _y, _mass, SHAPE::RECTANGLE), rsDegree(_rs), rsRadian(Deg2Rad(_rs)) { }
+	Rectangle2D(float _x, float _y, float _len) : Shape2D(_x, _y, 1, SHAPE::RECTANGLE), rsDegree(0), rsRadian(0) { }
 
-	inline float GetRotate() const { return rsDegree; }
+	void SetRotationalSpeedDegree(float _rs);
 
-
+	void Update() override;
+	void Collision(RECT rect) override;
+	void Collision(Shape2D* other) override;
+	void Draw(HDC hdc) override;
+	void Overlap(Shape2D* other) override;
 };
 
 #endif // !__ROTATESHAPE2D_H__

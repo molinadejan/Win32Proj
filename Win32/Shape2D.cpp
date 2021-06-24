@@ -1,13 +1,13 @@
 #include "Shape2D.h"
 
-void Shape2D::Bounce(const Point & normal, const Point & tangent, Shape2D * other)
+void Shape2D::Bounce(const Point & normal, const Point & tangent, const Point& myDir, Shape2D * other)
 {
 	// dir ³»Àû Á¢¼± º¤ÅÍ 
-	float dpTan1 = dir.x * tangent.x + dir.y * tangent.y;
+	float dpTan1 = myDir.x * tangent.x + myDir.y * tangent.y;
 	float dpTan2 = other->GetDir().x * tangent.x + other->GetDir().y * tangent.y;
 
 	// dir ³»Àû ³ë¸Ö º¤ÅÍ
-	float dpNorm1 = dir.x * normal.x + dir.y * normal.y;
+	float dpNorm1 = myDir.x * normal.x + myDir.y * normal.y;
 	float dpNorm2 = other->GetDir().x * normal.x + other->GetDir().y * normal.y;
 
 	//float m1 = (dpNorm1 * (mass - c->GetMass()) + 2.0f * c->GetMass() * dpNorm2) / (mass + c->GetMass());

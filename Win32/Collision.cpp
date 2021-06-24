@@ -5,6 +5,7 @@
 #include "Win32.h"
 
 #include "Circle2D.h"
+#include "Star2D.h"
 #include "Line2D.h"
 
 #include <vector>
@@ -157,10 +158,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		GetClientRect(hWnd, &rect);
 
 		// 오브젝트 위치 갱신을 위한 타이머
-		SetTimer(hWnd, 1, 64, NULL);
+		SetTimer(hWnd, 1, 32, NULL);
 
 		// 프레임 갱신을 위한 타이머
-		SetTimer(hWnd, 2, 64, NULL);
+		SetTimer(hWnd, 2, 32, NULL);
 	}
 	break;
 	case WM_SIZE:
@@ -208,7 +209,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		if (shapes.size() < SHAPE_MAX_CNT)
 		{
 			// 새로운 원을 만들고 초기화
-			Circle2D *newCircle = new Circle2D(LOWORD(lParam), HIWORD(lParam), (float)(50));
+			Circle2D *newCircle = new Circle2D(LOWORD(lParam), HIWORD(lParam), (float)(rand() % 100 + 20));
 
 			float speed = 5;
 
@@ -224,13 +225,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		if (shapes.size() < SHAPE_MAX_CNT)
 		{
-			// 새로운 직선을 만들고 초기화
-			Line2D *newLine = new Line2D(LOWORD(lParam), HIWORD(lParam), 400);
-			newLine->SetDir((rand() % 5) - 2.0f, (rand() % 5) - 2.0f);
-			newLine->SetRotationalSpeedDegree((float)(rand() % 2 + 1));
+			Star2D *newStar = new Star2D(LOWORD(lParam), HIWORD(lParam), (float)(rand() % 100 + 20));
+			float speed = 5;
 
-			// 리스트에 추가
-			shapes.push_back(newLine);
+			newStar->SetDir((rand() % (int)speed) - speed / 2, (rand() % (int)speed) - speed / 2);
+			newStar->SetRotationalSpeedDegree((float)(rand() % 2 - 1));
+
+			shapes.push_back(newStar);
 		}
 	}
 	break;

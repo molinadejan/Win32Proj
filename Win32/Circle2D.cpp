@@ -51,7 +51,7 @@ void Circle2D::Collision(Shape2D* other)
 			float ny = (c->GetCenter().y - center.y) / distance;
 
 			// 노말과 접선 벡터를 인자로
-			Bounce({ nx, ny }, {-ny, nx}, other);
+			Bounce({ nx, ny }, {-ny, nx}, dir, other);
 
 			// 겹칠 경우 처리
 			if (distance < c->GetRadius() + radius)

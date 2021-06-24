@@ -3,7 +3,6 @@
 #define __CIRCLE2D_H__
 
 #include "Shape2D.h"
-//#include "Shape2D.cpp"
 
 class Circle2D : public Shape2D
 {
@@ -14,7 +13,7 @@ private:
 public:
 	
 	//Circle2D() : Shape2D(SHAPE::CIRCLE), radius(1) { }
-	Circle2D(float _x, float _y, float _r) : Shape2D(_x, _y, _r * _r * 3.14f / 10.0f, SHAPE::CIRCLE), radius(_r) { }
+	Circle2D(float _x, float _y, float _r, SHAPE _shape = SHAPE::CIRCLE) : Shape2D(_x, _y, 1, _shape), radius(_r) { }
 
 	inline float GetRadius() const { return radius; }
 

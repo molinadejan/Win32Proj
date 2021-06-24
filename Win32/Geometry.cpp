@@ -113,7 +113,7 @@ void DrawStar(HDC hdc, const Point &center, const int radius, int degree)
 
 Point GetIntersection(const Point &p1, const Point &p2, const Point &p3, const Point &p4, bool &check)
 {
-	int slopeDiff = (p1.x - p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x - p4.x);
+	float slopeDiff = (p1.x - p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x - p4.x);
 
 	if (slopeDiff == 0)
 	{
@@ -124,10 +124,10 @@ Point GetIntersection(const Point &p1, const Point &p2, const Point &p3, const P
 	float tmpX = (p1.x * p2.y - p1.y * p2.x) * (p3.x - p4.x) - (p1.x - p2.x) * (p3.x * p4.y - p3.y * p4.x);
 	float tmpY = (p1.x * p2.y - p1.y * p2.x) * (p3.y - p4.y) - (p1.y - p2.y) * (p3.x * p4.y - p3.y * p4.x);
 
-	tmpX /= (float)slopeDiff;
-	tmpY /= (float)slopeDiff;
+	tmpX /= slopeDiff;
+	tmpY /= slopeDiff;
 
-	return { (float)floor(tmpX + 0.5), (float)floor(tmpY + 0.5) };
+	return { tmpX, tmpY };
 }
 
 Point Rotate(const Point &center, const Point &p, const float radian)
@@ -137,9 +137,7 @@ Point Rotate(const Point &center, const Point &p, const float radian)
 	float tmpX = cos(radian) * tmp.x - sin(radian) * tmp.y;
 	float tmpY = sin(radian) * tmp.x + cos(radian) * tmp.y;
 
-	tmp = { (float)tmpX, (float)tmpY };
-
-	return tmp;
+	return {tmpX, tmpY};
 }
 
 float Rad2Deg(const float radian)

@@ -77,7 +77,7 @@ void Line2D::Collision(Shape2D * other)
 			float nx = (c->GetCenter().x - (start.x + center.x)) / distance;
 			float ny = (c->GetCenter().y - (start.y + center.y)) / distance;
 
-			Bounce({ nx, ny }, { -ny, nx }, other);
+			Bounce({ nx, ny }, { -ny, nx }, dir, other);
 
 			if (distance < c->GetRadius())
 			{
@@ -99,7 +99,7 @@ void Line2D::Collision(Shape2D * other)
 			float nx = (c->GetCenter().x - (end.x + center.x)) / distance;
 			float ny = (c->GetCenter().y - (end.y + center.y)) / distance;
 
-			Bounce({ nx, ny }, { -ny, nx }, other);
+			Bounce({ nx, ny }, { -ny, nx }, dir, other);
 
 			if (distance < c->GetRadius())
 			{
@@ -133,14 +133,33 @@ void Line2D::Collision(Shape2D * other)
 
 			contact = { pointX, pointY };
 
-			if ((distance = GetDistance(c->GetCenter(), { pointX, pointY })) <= c->GetRadius())
+			if (GetDistance(center, contact) <= uLen / 2 && (distance = GetDistance(c->GetCenter(), { pointX, pointY })) <= c->GetRadius())
 			{
 				float nx = (c->GetCenter().x - pointX) / distance;
 				float ny = (c->GetCenter().y - pointY) / distance;
 
-				Bounce({ nx, ny }, { -ny, nx }, other);
+				/*
+				Point newDir = { dir.x + c->GetCenter().x - pointX, dir.y + c->GetCenter().y - pointY };
+				
+				float newDirLen = sqrt(newDir.x * newDir.x + newDir.y * newDir.y);
 
-				/*if (distance < c->GetRadius())
+				newDir.x /= newDirLen;
+				newDir.y /= newDirLen;
+
+				float dirLen = sqrt(dir.x * dir.x + dir.y * dir.y);
+
+				newDir.x *= dirLen;
+				newDir.y *= dirLen;
+				*/
+
+				Bounce({ nx, ny }, { -ny, nx }, dir, other);
+
+				/*
+				rsDegree *= -1;
+				rsRadian = Deg2Rad(rsDegree);
+				*/
+
+				if (distance < c->GetRadius())
 				{
 					float overlap = (distance - c->GetRadius()) * 0.5f;
 
@@ -151,7 +170,7 @@ void Line2D::Collision(Shape2D * other)
 					float targetCY = c->GetCenter().y + overlap * (pointY - c->GetCenter().y) / distance;
 
 					c->SetCenter(targetCX, targetCY);
-				}*/
+				}
 			}
 		}
 	}
@@ -168,14 +187,14 @@ void Line2D::Draw(HDC hdc)
 	MoveToEx(hdc, sx, sy, NULL);
 	LineTo(hdc, ex, ey);
 
-	Ellipse(hdc,
+	/*Ellipse(hdc,
 		(int)floor(contact.x - 10 + 0.5f),
 		(int)floor(contact.y - 10 + 0.5f),
 		(int)floor(contact.x + 10 + 0.5f),
 		(int)floor(contact.y + 10 + 0.5f)
 	);
 
-	DrawRectangle(hdc, center, 10, 10);
+	DrawRectangle(hdc, center, 10, 10);*/
 }
 
 void Line2D::Overlap(Shape2D * other)
