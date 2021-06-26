@@ -31,6 +31,18 @@ Point operator/(const Point& p, const double d)
 	return { p.x / d, p.y / d };
 }
 
+void operator+=(Point& p1, const Point& p2)
+{
+	p1.x += p2.x;
+	p1.y += p2.y;
+}
+
+void operator-=(Point& p1, const Point& p2)
+{
+	p1.x -= p2.x;
+	p1.y -= p2.y;
+}
+
 double Dot(const Point& p1, const Point& p2)
 {
 	return p1.x * p2.x + p1.y * p2.y;

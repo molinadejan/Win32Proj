@@ -119,7 +119,7 @@ void Circle2D::Overlap(Shape2D * other)
 		{
 			double overlap = (distance - radius - c->GetRadius()) * 0.5f;
 
-			center = center - overlap * (center - c->GetCenter()) / distance;
+			center -= overlap * (center - c->GetCenter()) / distance;
 
 			Point newOtherCenter = c->GetCenter() + overlap * (center - c->GetCenter()) / distance;
 			c->SetCenter(newOtherCenter);
@@ -142,7 +142,7 @@ void Circle2D::Overlap(Shape2D * other)
 
 				double overlap = (distance - radius) * 0.5f;
 
-				center = center - normal * overlap;
+				center -= normal * overlap;
 
 				Point newOtherCenter = r->GetCenter() + overlap * normal;
 

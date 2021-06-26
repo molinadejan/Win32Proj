@@ -19,6 +19,9 @@ Point operator*(const double d, const Point& p);
 
 Point operator/(const Point& p, const double d);
 
+void operator+=(Point& p1, const Point& p2);
+void operator-=(Point& p1, const Point& p2);
+
 double Dot(const Point& p1, const Point& p2);
 
 void DrawGrid(HDC hdc, const Point &p, int colCnt, int rowCnt, int colGap, int rowGap);

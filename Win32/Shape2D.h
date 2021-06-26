@@ -38,7 +38,10 @@ public:
 
 	inline void SetCenter(double _x, double _y) { center = { _x, _y }; }
 	void SetCenter(const Point& p) { center = p; }
+
 	void SetDir(double _x, double _y)    { dir = { _x, _y };    }
+	void SetDir(const Point& p) { dir = p; }
+
 	void SetMass(double _mass)          { mass = _mass;        }
 
 	// 도형의 위치 갱신

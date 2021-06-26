@@ -244,7 +244,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 				double speed = 11;
 				newRec->SetDir((rand() % (int)speed) - speed / 2, (rand() % (int)speed) - speed / 2);
-				//newRec->SetRotationalSpeedDegree((double)(rand() % 2 + 1));
+				newRec->SetRotationalSpeedDegree((double)(rand() % 2 + 1));
 
 				shapes.push_back(newRec);
 			}
