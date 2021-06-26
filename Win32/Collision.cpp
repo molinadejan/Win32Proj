@@ -240,7 +240,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			}
 			else if (mode == 2)
 			{
-				Rectangle2D *newRec = new Rectangle2D(LOWORD(lParam), HIWORD(lParam), (double)(300));
+				Rectangle2D *newRec = new Rectangle2D(LOWORD(lParam), HIWORD(lParam), (double)(100));
 
 				double speed = 11;
 				newRec->SetDir((rand() % (int)speed) - speed / 2, (rand() % (int)speed) - speed / 2);

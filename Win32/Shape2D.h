@@ -23,10 +23,8 @@ protected:
 	Point  center;   // 중심 좌표
 	Point  dir;      // 이동방향
 	double mass;     // 도형 질량 (아직 미적용)
-	//double  distance; // 다른 도형과의 거리를 저장할 변수
 	SHAPE  type;     // 도형 타입
 
-	//Shape2D(SHAPE _type) : center({ 0, 0 }), dir({ 0, 0 }), mass(1), distance(0), type(_type) { }
 	Shape2D(double _x, double _y, double _mass, SHAPE _type) : center({ _x, _y }), dir({ 0, 0 }), mass(_mass), type(_type) { }
 
 public:

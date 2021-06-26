@@ -154,22 +154,14 @@ void Circle2D::Overlap(Shape2D * other)
 
 		for (int i = 0; i < 4; ++i)
 		{
-			// 사각형의 기준점
 			Point stdPoint = r->GetAbsolutePoint(i);
-
-			// 사각형의 한 변 벡터
 			Point recSide = r->GetAbsolutePoint((i + 1) % 4) - stdPoint;
-
-			// 기준점 -> 원의 중심 벡터
 			Point stdToCircleCenter = center - stdPoint;
 
-			// 정사영한 길이의 비율
 			double proj = Dot(recSide, stdToCircleCenter) / (r->GetLen() * r->GetLen());
 
-			// 충돌 지점
 			Point colPoint = stdPoint + recSide * proj;
 
-			// 충돌 지점에서 원의 중심까지의 거리
 			double distance = GetDistance(colPoint, center);
 
 			if (proj >= 0 && proj <= 1 && distance < radius)

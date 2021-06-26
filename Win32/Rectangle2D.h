@@ -22,7 +22,6 @@ protected:
 	double len;
 public:
 
-	//Rectangle2D(SHAPE _type) : Shape2D(_type), rotate(0) { } 
 	Rectangle2D(double _x, double _y, double _len);
 
 	Point GetRelativePoint(int idx) { return points[idx]; }

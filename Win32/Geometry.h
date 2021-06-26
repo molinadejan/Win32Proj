@@ -21,14 +21,15 @@ Point operator/(const Point& p, const double d);
 
 void operator+=(Point& p1, const Point& p2);
 void operator-=(Point& p1, const Point& p2);
+void operator/=(Point& p, double d);
 
 double Dot(const Point& p1, const Point& p2);
 
-void DrawGrid(HDC hdc, const Point &p, int colCnt, int rowCnt, int colGap, int rowGap);
-void DrawCircle(HDC hdc, const Point &p, int radius);
-void DrawSunflowerByRadius(HDC hdc, const Point &center, int radius, int leafRadius);
-void DrawSunflowerByCount(HDC hdc, const Point &center, int radius, int cnt);
-void DrawRectangle(HDC hdc, const Point &p, int width, int height);
+//void DrawGrid(HDC hdc, const Point &p, int colCnt, int rowCnt, int colGap, int rowGap);
+void DrawCircle(HDC hdc, const Point &p, double radius);
+//void DrawSunflowerByRadius(HDC hdc, const Point &center, int radius, int leafRadius);
+//void DrawSunflowerByCount(HDC hdc, const Point &center, int radius, int cnt);
+void DrawRectangle(HDC hdc, const Point &p, double width, double height);
 void DrawStar(HDC hdc, const Point &center, const int radius, int degree);
 
 Point GetIntersection(const Point &p1, const Point &p2, const Point &p3, const Point &p4, bool &check);

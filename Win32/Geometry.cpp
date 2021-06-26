@@ -43,77 +43,85 @@ void operator-=(Point& p1, const Point& p2)
 	p1.y -= p2.y;
 }
 
+void operator/=(Point& p, double d)
+{
+	//if (p.x == 0 || p.y == 0)
+		//return;
+
+	p.x /= d;
+	p.y /= d;
+}
+
 double Dot(const Point& p1, const Point& p2)
 {
 	return p1.x * p2.x + p1.y * p2.y;
 }
 
-void DrawGrid(HDC hdc, const Point &p, int colCnt, int rowCnt, int colGap, int rowGap)
-{
-	int bottom = p.y + rowCnt * rowGap;
-	int right = p.x + colCnt * colGap;
+//void DrawGrid(HDC hdc, const Point &p, int colCnt, int rowCnt, int colGap, int rowGap)
+//{
+//	int bottom = p.y + rowCnt * rowGap;
+//	int right = p.x + colCnt * colGap;
+//
+//	// col
+//	for (int i = p.x; i <= right; i += colGap)
+//	{
+//		MoveToEx(hdc, i, p.y, NULL);
+//		LineTo(hdc, i, bottom);
+//	}
+//
+//	//row
+//	for (int i = p.y; i <= bottom; i += rowGap)
+//	{
+//		MoveToEx(hdc, p.x, i, NULL);
+//		LineTo(hdc, right, i);
+//	}
+//}
 
-	// col
-	for (int i = p.x; i <= right; i += colGap)
-	{
-		MoveToEx(hdc, i, p.y, NULL);
-		LineTo(hdc, i, bottom);
-	}
-
-	//row
-	for (int i = p.y; i <= bottom; i += rowGap)
-	{
-		MoveToEx(hdc, p.x, i, NULL);
-		LineTo(hdc, right, i);
-	}
-}
-
-void DrawCircle(HDC hdc, const Point &p, int radius)
+void DrawCircle(HDC hdc, const Point &p, double radius)
 {
 	Ellipse(hdc, p.x - radius, p.y - radius, p.x + radius, p.y + radius);
 }
 
-void DrawSunflowerByRadius(HDC hdc, const Point &center, int radius, int leafRadius)
-{
-	DrawCircle(hdc, center, radius);
+//void DrawSunflowerByRadius(HDC hdc, const Point &center, int radius, int leafRadius)
+//{
+//	DrawCircle(hdc, center, radius);
+//
+//	double angleRadian = 2 * asin((double)leafRadius / (radius + leafRadius));
+//	double angle = Rad2Deg(angleRadian);
+//
+//	Point tmpP = { center.x, center.y - radius - leafRadius };
+//
+//	for (double i = 0; i < 360; i += angle)
+//	{
+//		DrawCircle(hdc, tmpP, leafRadius);
+//		tmpP = Rotate(center, tmpP, angleRadian);
+//	}
+//}
 
-	double angleRadian = 2 * asin((double)leafRadius / (radius + leafRadius));
-	double angle = Rad2Deg(angleRadian);
+//void DrawSunflowerByCount(HDC hdc, const Point &center, int radius, int cnt)
+//{
+//	// 인접한 원의 개수는 최소 3개
+//	if (cnt < 3) cnt = 3;
+//
+//	DrawCircle(hdc, center, radius);
+//
+//	double angle = 360.0 / cnt;
+//	double angleRadian = Deg2Rad(angle);
+//
+//	double _leafRadius = radius * sin(angleRadian / 2) / (1 - sin(angleRadian / 2));
+//
+//	int leafRadius = (int)floor(_leafRadius + 0.5);
+//
+//	Point tmpP = { center.x, center.y - radius - leafRadius };
+//
+//	for (double i = 0; i < 360; i += angle)
+//	{
+//		DrawCircle(hdc, tmpP, leafRadius);
+//		tmpP = Rotate(center, tmpP, angleRadian);
+//	}
+//}
 
-	Point tmpP = { center.x, center.y - radius - leafRadius };
-
-	for (double i = 0; i < 360; i += angle)
-	{
-		DrawCircle(hdc, tmpP, leafRadius);
-		tmpP = Rotate(center, tmpP, angleRadian);
-	}
-}
-
-void DrawSunflowerByCount(HDC hdc, const Point &center, int radius, int cnt)
-{
-	// 인접한 원의 개수는 최소 3개
-	if (cnt < 3) cnt = 3;
-
-	DrawCircle(hdc, center, radius);
-
-	double angle = 360.0 / cnt;
-	double angleRadian = Deg2Rad(angle);
-
-	//double _leafRadius = radius * sqrt(2 - 2 * cos(angleRadian)) / (2 - sqrt(2 - 2 * cos(angleRadian)));
-	double _leafRadius = radius * sin(angleRadian / 2) / (1 - sin(angleRadian / 2));
-
-	int leafRadius = (int)floor(_leafRadius + 0.5);
-
-	Point tmpP = { center.x, center.y - radius - leafRadius };
-
-	for (double i = 0; i < 360; i += angle)
-	{
-		DrawCircle(hdc, tmpP, leafRadius);
-		tmpP = Rotate(center, tmpP, angleRadian);
-	}
-}
-
-void DrawRectangle(HDC hdc, const Point &p, int width, int height)
+void DrawRectangle(HDC hdc, const Point &p, double width, double height)
 {
 	Rectangle(hdc, p.x - width / 2, p.y - height / 2, p.x + width / 2, p.y + height / 2);
 }
