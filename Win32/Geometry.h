@@ -12,6 +12,14 @@ struct Point
 };
 
 Point operator+(const Point& p1, const Point& p2);
+Point operator-(const Point& p1, const Point& p2);
+
+Point operator*(const Point& p, const double d);
+Point operator*(const double d, const Point& p);
+
+Point operator/(const Point& p, const double d);
+
+double Dot(const Point& p1, const Point& p2);
 
 void DrawGrid(HDC hdc, const Point &p, int colCnt, int rowCnt, int colGap, int rowGap);
 void DrawCircle(HDC hdc, const Point &p, int radius);

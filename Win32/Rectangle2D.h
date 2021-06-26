@@ -25,7 +25,8 @@ public:
 	//Rectangle2D(SHAPE _type) : Shape2D(_type), rotate(0) { } 
 	Rectangle2D(double _x, double _y, double _len);
 
-	Point GetPoint(int idx) { return points[idx]; }
+	Point GetRelativePoint(int idx) { return points[idx]; }
+	Point GetAbsolutePoint(int idx) { return points[idx] + center; }
 	double GetLen() { return len; }
 
 	void SetRotationalSpeedDegree(double _rs);

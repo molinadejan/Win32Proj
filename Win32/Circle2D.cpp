@@ -47,12 +47,8 @@ void Circle2D::Collision(Shape2D* other)
 
 		if (distance  <= c->GetRadius() + radius)
 		{
-			// 노멀 벡터 (원의 중심 - 원의 중심) 의 정규화
-			double nx = (c->GetCenter().x - center.x) / distance;
-			double ny = (c->GetCenter().y - center.y) / distance;
-
-			// 노말과 접선 벡터를 인자로
-			Bounce({ nx, ny }, {-ny, nx}, dir, other);
+			Point normal = (c->GetCenter() - center) / distance;
+			Bounce(normal, dir, other);
 		}
 		
 		return;
@@ -64,14 +60,12 @@ void Circle2D::Collision(Shape2D* other)
 	{
 		for (int i = 0; i < 4; ++i)
 		{
-			double distance = GetDistance(center, r->GetCenter() + r->GetPoint(i));
+			double distance = GetDistance(center,r->GetAbsolutePoint(i));
 
-			if (distance <= radius + 5.0f)
+			if (distance <= radius)
 			{
-				double nx = (center.x - (r->GetPoint(i).x + r->GetCenter().x)) / distance;
-				double ny = (center.y - (r->GetPoint(i).y + r->GetCenter().y)) / distance;
-
-				Bounce({ nx, ny }, {-ny, nx}, dir, other);
+				Point normal = (center - r->GetAbsolutePoint(i)) / distance;
+				Bounce(normal, dir, other);
 
 				return;
 			}
@@ -79,43 +73,42 @@ void Circle2D::Collision(Shape2D* other)
 
 		for (int i = 0; i < 4; ++i)
 		{
-			double ux = (r->GetPoint((i + 1) % 4).x - r->GetPoint(i).x);
-			double uy = (r->GetPoint((i + 1) % 4).y - r->GetPoint(i).y);
+			// 사각형의 기준점
+			Point stdPoint = r->GetAbsolutePoint(i);
 
-			// 원의 중심 - 꼭지점 벡터 c
-			double cx = center.x - (r->GetPoint(i).x + r->GetCenter().x);
-			double cy = center.y - (r->GetPoint(i).y + r->GetCenter().y);
+			// 사각형의 한 변 벡터
+			Point recSide = r->GetAbsolutePoint((i + 1) % 4) - stdPoint;
 
-			double dotProj = (ux * cx + uy * cy) / (r->GetLen() * r->GetLen());
+			// 기준점 -> 원의 중심 벡터
+			Point stdToCircleCenter = center - stdPoint;
 
-			double pointX = r->GetPoint(i).x + r->GetCenter().x + dotProj * ux;
-			double pointY = r->GetPoint(i).y + r->GetCenter().y + dotProj * uy;
+			// 정사영한 길이의 비율
+			double proj = Dot(recSide, stdToCircleCenter) / (r->GetLen() * r->GetLen());
 
-			double minX = min(r->GetPoint(i).x + r->GetCenter().x, r->GetPoint((i + 1) % 4).x + r->GetCenter().x);
-			double maxX = max(r->GetPoint(i).x + r->GetCenter().x, r->GetPoint((i + 1) % 4).x + r->GetCenter().x);
+			// 충돌 지점
+			Point colPoint = stdPoint + recSide * proj;
 
-			double minY = min(r->GetPoint(i).y + r->GetCenter().y, r->GetPoint((i + 1) % 4).y + r->GetCenter().y);
-			double maxY = max(r->GetPoint(i).y + r->GetCenter().y, r->GetPoint((i + 1) % 4).y + r->GetCenter().y);
+			// 충돌 지점에서 원의 중심까지의 거리
+			double distance = GetDistance(colPoint, center);
 
-			bool check = false;
-
-			if (minX <= pointX && pointX <= maxX && minY <= pointY && pointY <= maxY) check = true;
-
-			if (check && (distance = GetDistance(center, { pointX, pointY })) <= radius)
+			if (proj >= 0 && proj <= 1 && distance <= radius)
 			{
-				double nx = (center.x - pointX) / distance;
-				double ny = (center.y - pointY) / distance;
-
-				Bounce({ nx, ny }, { -ny, nx }, dir, other);
+				Point normal = (center - colPoint) / distance;
+				Bounce(normal, dir, other);
+				return;
 			}
-
-			return;
 		}
 	}
 }
 
 void Circle2D::Overlap(Shape2D * other)
 {
+	if (type > other->GetType())
+	{
+		other->Overlap(this);
+		return;
+	}
+
 	Circle2D *c = dynamic_cast<Circle2D *>(other);
 
 	if (c)
@@ -126,13 +119,12 @@ void Circle2D::Overlap(Shape2D * other)
 		{
 			double overlap = (distance - radius - c->GetRadius()) * 0.5f;
 
-			center.x -= overlap * (center.x - c->GetCenter().x) / distance;
-			center.y -= overlap * (center.y - c->GetCenter().y) / distance;
+			center = center - overlap * (center - c->GetCenter()) / distance;
 
-			double targetCX = c->GetCenter().x + overlap * (center.x - c->GetCenter().x) / distance;
-			double targetCY = c->GetCenter().y + overlap * (center.y - c->GetCenter().y) / distance;
-		
-			c->SetCenter(targetCX, targetCY);
+			Point newOtherCenter = c->GetCenter() + overlap * (center - c->GetCenter()) / distance;
+			c->SetCenter(newOtherCenter);
+
+			return;
 		}
 	}
 
@@ -142,65 +134,56 @@ void Circle2D::Overlap(Shape2D * other)
 	{
 		for (int i = 0; i < 4; ++i)
 		{
-			double distance = GetDistance(center, r->GetCenter() + r->GetPoint(i));
+			double distance = GetDistance(center,r->GetAbsolutePoint(i));
 
 			if (distance < radius)
 			{
-				double nx = (center.x - (r->GetPoint(i).x + r->GetCenter().x)) / distance;
-				double ny = (center.y - (r->GetPoint(i).y + r->GetCenter().y)) / distance;
+				Point normal = (center - r->GetAbsolutePoint(i)) / distance;
 
 				double overlap = (distance - radius) * 0.5f;
 
-				center.x -= overlap * nx;
-				center.y -= overlap * ny;
+				center = center - normal * overlap;
 
-				double targetCX = r->GetCenter().x + overlap * nx;
-				double targetCY = r->GetCenter().y + overlap * ny;
+				Point newOtherCenter = r->GetCenter() + overlap * normal;
 
-				r->SetCenter(targetCX, targetCY);
+				r->SetCenter(newOtherCenter);
+
+				return;
 			}
 		}
 
 		for (int i = 0; i < 4; ++i)
 		{
-			double ux = (r->GetPoint((i + 1) % 4).x - r->GetPoint(i).x);
-			double uy = (r->GetPoint((i + 1) % 4).y - r->GetPoint(i).y);
+			// 사각형의 기준점
+			Point stdPoint = r->GetAbsolutePoint(i);
 
-			// 원의 중심 - 꼭지점 벡터 c
-			double cx = center.x - (r->GetPoint(i).x + r->GetCenter().x);
-			double cy = center.y - (r->GetPoint(i).y + r->GetCenter().y);
+			// 사각형의 한 변 벡터
+			Point recSide = r->GetAbsolutePoint((i + 1) % 4) - stdPoint;
 
-			double dotProj = (ux * cx + uy * cy) / (r->GetLen() * r->GetLen());
+			// 기준점 -> 원의 중심 벡터
+			Point stdToCircleCenter = center - stdPoint;
 
-			double pointX = r->GetPoint(i).x + r->GetCenter().x + dotProj * ux;
-			double pointY = r->GetPoint(i).y + r->GetCenter().y + dotProj * uy;
+			// 정사영한 길이의 비율
+			double proj = Dot(recSide, stdToCircleCenter) / (r->GetLen() * r->GetLen());
 
-			double minX = min(r->GetPoint(i).x + r->GetCenter().x, r->GetPoint((i + 1) % 4).x + r->GetCenter().x);
-			double maxX = max(r->GetPoint(i).x + r->GetCenter().x, r->GetPoint((i + 1) % 4).x + r->GetCenter().x);
+			// 충돌 지점
+			Point colPoint = stdPoint + recSide * proj;
 
-			double minY = min(r->GetPoint(i).y + r->GetCenter().y, r->GetPoint((i + 1) % 4).y + r->GetCenter().y);
-			double maxY = max(r->GetPoint(i).y + r->GetCenter().y, r->GetPoint((i + 1) % 4).y + r->GetCenter().y);
+			// 충돌 지점에서 원의 중심까지의 거리
+			double distance = GetDistance(colPoint, center);
 
-			bool check = false;
-
-			if (minX <= pointX && pointX <= maxX && minY <= pointY && pointY <= maxY) check = true;
-
-			double distance = GetDistance(center, { pointX, pointY });
-
-			if (check && (distance = GetDistance(center, { pointX, pointY })) < radius)
+			if (proj >= 0 && proj <= 1 && distance < radius)
 			{
-				double nx = (center.x - pointX) / distance;
-				double ny = (center.y - pointY) / distance;
+				Point normal = (center - colPoint) / distance;
 
 				double overlap = (distance - radius) * 0.5f;
 
-				center.x -= overlap * nx;
-				center.y -= overlap * ny;
+				center = center - overlap * normal;
 
-				double targetCX = r->GetCenter().x + overlap * nx;
-				double targetCY = r->GetCenter().y + overlap * ny;
+				Point newOtherCenter = r->GetCenter() + overlap * normal;
+				r->SetCenter(newOtherCenter);
 
-				r->SetCenter(targetCX, targetCY);
+				return;
 			}
 		}
 	}
@@ -208,7 +191,6 @@ void Circle2D::Overlap(Shape2D * other)
 
 void Circle2D::Draw(HDC hdc)
 {
-	//DrawCircle(hdc, center, radius);
 	Ellipse(hdc,
 		(int)floor(center.x - radius + 0.5f),
 		(int)floor(center.y - radius + 0.5f),

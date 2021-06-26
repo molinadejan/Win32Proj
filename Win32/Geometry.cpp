@@ -8,6 +8,34 @@ Point operator+(const Point& p1, const Point& p2)
 	return { p1.x + p2.x, p1.y + p2.y };
 }
 
+Point operator-(const Point& p1, const Point& p2)
+{
+	return { p1.x - p2.x, p1.y - p2.y };
+}
+
+Point operator*(const Point& p, const double d)
+{
+	return { p.x * d, p.y *d };
+}
+
+Point operator*(const double d, const Point& p)
+{
+	return { p.x * d, p.y *d };
+}
+
+Point operator/(const Point& p, const double d)
+{
+	if (d == 0)
+		return { p.x, p.y };
+
+	return { p.x / d, p.y / d };
+}
+
+double Dot(const Point& p1, const Point& p2)
+{
+	return p1.x * p2.x + p1.y * p2.y;
+}
+
 void DrawGrid(HDC hdc, const Point &p, int colCnt, int rowCnt, int colGap, int rowGap)
 {
 	int bottom = p.y + rowCnt * rowGap;

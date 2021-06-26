@@ -1,7 +1,9 @@
 #include "Shape2D.h"
 
-void Shape2D::Bounce(const Point & normal, const Point & tangent, const Point& myDir, Shape2D * other)
+void Shape2D::Bounce(const Point & normal, const Point& myDir, Shape2D * other)
 {
+	Point tangent = { -1 * normal.y, normal.x };
+
 	// dir 내적 접선 벡터 
 	double dpTan1 = myDir.x * tangent.x + myDir.y * tangent.y;
 	double dpTan2 = other->GetDir().x * tangent.x + other->GetDir().y * tangent.y;

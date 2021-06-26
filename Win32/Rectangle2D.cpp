@@ -1,4 +1,5 @@
 #include "Rectangle2D.h"
+#include "Circle2D.h"
 
 Rectangle2D::Rectangle2D(double _x, double _y, double _len)
 	: Shape2D(_x, _y, 1, SHAPE::RECTANGLE), rsDegree(0), rsRadian(0), len(_len)
@@ -67,98 +68,6 @@ void Rectangle2D::Collision(Shape2D * other)
 
 	if (r)
 	{
-		{
-			double s1x = points[1].x - points[0].x;
-			double s1y = points[1].y - points[0].y;
-
-			double s2x = points[2].x - points[1].x;
-			double s2y = points[2].y - points[1].y;
-
-			// 기준은 points[0];
-
-			for (int i = 0; i < 4; ++i)
-			{
-				double px = r->GetCenter().x + r->GetPoint(i).x - (points[0].x + center.x);
-				double py = r->GetCenter().y + r->GetPoint(i).y - (points[0].y + center.y);
-
-				double dotProj1 = (s1x * px + s1y * py) / (len * len);
-				double dotProj2 = (s2x * px + s2y * py) / (len * len);
-
-				if ((dotProj1 >= 0 && dotProj1 <= 1) && (dotProj2 >= 0 && dotProj2 <= 1))
-				{
-					double nx, ny;
-
-					if (dotProj1 < dotProj2)
-					{
-						nx = s1x / len;
-						ny = s1y / len;
-					}
-					else
-					{
-						nx = s2x / len;
-						ny = s2y / len;
-					}
-
-					Bounce({ nx, ny }, { -ny, nx }, dir, other);
-
-					return;
-				}
-			}
-		}
-		{
-			double s1x = r->GetPoint(1).x - r->GetPoint(0).x;
-			double s1y = r->GetPoint(1).y - r->GetPoint(0).y;
-
-			double s2x = r->GetPoint(2).x - r->GetPoint(1).x;
-			double s2y = r->GetPoint(2).y - r->GetPoint(1).y;
-
-			for (int i = 0; i < 4; ++i)
-			{
-				double px = (points[i].x + center.x) - (r->GetCenter().x + r->GetPoint(0).x);
-				double py = (points[i].y + center.y) - (r->GetCenter().y + r->GetPoint(0).y);
-
-				double dotProj1 = (s1x * px + s1y * py) / (r->GetLen() * r->GetLen());
-				double dotProj2 = (s2x * px + s2y * py) / (r->GetLen() * r->GetLen());
-
-				if ((dotProj1 >= 0 && dotProj1 <= 1) && (dotProj2 >= 0 && dotProj2 <= 1))
-				{
-					double nx, ny;
-
-					if (dotProj1 < dotProj2)
-					{
-						nx = s1x / len;
-						ny = s1y / len;
-					}
-					else
-					{
-						nx = s2x / len;
-						ny = s2y / len;
-					}
-
-					Bounce({ nx, ny }, { -ny, nx }, dir, other);
-
-					return;
-				}
-			}
-		}
-	}
-}
-
-void Rectangle2D::Draw(HDC hdc)
-{
-	for (int i = 0; i < 4; ++i)
-	{
-		MoveToEx(hdc, points[i].x + center.x, points[i].y + center.y, NULL);
-		LineTo(hdc, points[(i + 1) % 4].x + center.x, points[(i + 1) % 4].y + center.y);
-	}
-}
-
-void Rectangle2D::Overlap(Shape2D * other)
-{
-	Rectangle2D *r = dynamic_cast<Rectangle2D *>(other);
-
-	if (r)
-	{
 		double s1x = points[1].x - points[0].x;
 		double s1y = points[1].y - points[0].y;
 
@@ -169,8 +78,8 @@ void Rectangle2D::Overlap(Shape2D * other)
 
 		for (int i = 0; i < 4; ++i)
 		{
-			double px = r->GetCenter().x + r->GetPoint(i).x - (points[0].x + center.x);
-			double py = r->GetCenter().y + r->GetPoint(i).y - (points[0].y + center.y);
+			double px = r->GetCenter().x + r->GetRelativePoint(i).x - (points[0].x + center.x);
+			double py = r->GetCenter().y + r->GetRelativePoint(i).y - (points[0].y + center.y);
 
 			double dotProj1 = (s1x * px + s1y * py) / (len * len);
 			double dotProj2 = (s2x * px + s2y * py) / (len * len);
@@ -190,7 +99,147 @@ void Rectangle2D::Overlap(Shape2D * other)
 					ny = s2y / len;
 				}
 
-				Bounce({ nx, ny }, { -ny, nx }, dir, other);
+				Bounce({ nx, ny }, dir, other);
+
+				return;
+			}
+		}
+		
+		s1x = r->GetRelativePoint(1).x - r->GetRelativePoint(0).x;
+		s1y = r->GetRelativePoint(1).y - r->GetRelativePoint(0).y;
+
+		s2x = r->GetRelativePoint(2).x - r->GetRelativePoint(1).x;
+		s2y = r->GetRelativePoint(2).y - r->GetRelativePoint(1).y;
+
+		for (int i = 0; i < 4; ++i)
+		{
+			double px = (points[i].x + center.x) - (r->GetCenter().x + r->GetRelativePoint(0).x);
+			double py = (points[i].y + center.y) - (r->GetCenter().y + r->GetRelativePoint(0).y);
+
+			double dotProj1 = (s1x * px + s1y * py) / (r->GetLen() * r->GetLen());
+			double dotProj2 = (s2x * px + s2y * py) / (r->GetLen() * r->GetLen());
+
+			if ((dotProj1 >= 0 && dotProj1 <= 1) && (dotProj2 >= 0 && dotProj2 <= 1))
+			{
+				double nx, ny;
+
+				if (dotProj1 < dotProj2)
+				{
+					nx = s1x / len;
+					ny = s1y / len;
+				}
+				else
+				{
+					nx = s2x / len;
+					ny = s2y / len;
+				}
+
+				Bounce({ nx, ny }, dir, other);
+
+				return;
+			}
+		}
+	}
+}
+
+void Rectangle2D::Draw(HDC hdc)
+{
+	for (int i = 0; i < 4; ++i)
+	{
+		MoveToEx(hdc, points[i].x + center.x, points[i].y + center.y, NULL);
+		LineTo(hdc, points[(i + 1) % 4].x + center.x, points[(i + 1) % 4].y + center.y);
+	}
+}
+
+void Rectangle2D::Overlap(Shape2D * other)
+{
+	if (type > other->GetType())
+	{
+		other->Overlap(this);
+		return;
+	}
+
+	Rectangle2D *r = dynamic_cast<Rectangle2D *>(other);
+
+	if (r)
+	{
+		double s1x = points[1].x - points[0].x;
+		double s1y = points[1].y - points[0].y;
+
+		double s2x = points[2].x - points[1].x;
+		double s2y = points[2].y - points[1].y;
+
+		// 기준은 points[0];
+
+		for (int i = 0; i < 4; ++i)
+		{
+			double px = r->GetCenter().x + r->GetRelativePoint(i).x - (points[0].x + center.x);
+			double py = r->GetCenter().y + r->GetRelativePoint(i).y - (points[0].y + center.y);
+
+			double dotProj1 = (s1x * px + s1y * py) / (len * len);
+			double dotProj2 = (s2x * px + s2y * py) / (len * len);
+
+			if ((dotProj1 > 0 && dotProj1 < 1) && (dotProj2 > 0 && dotProj2 < 1))
+			{
+				float distance = GetDistance({ 0, 0 }, {px, py});
+
+				double nx = px / distance;
+				double ny = py / distance;
+
+				float overlap;
+
+				if (dotProj1 > dotProj2)
+					overlap = distance / dotProj1 * (1.0f - dotProj1) / 2;
+				else
+					overlap = distance / dotProj2 * (1.0f - dotProj2) / 2;
+
+				center.x -= overlap * nx;
+				center.y -= overlap * ny;
+
+				double targetCX = r->GetCenter().x + overlap * nx;
+				double targetCY = r->GetCenter().y + overlap * ny;
+
+				r->SetCenter(targetCX, targetCY);
+
+				return;
+			}
+		}
+
+		s1x = r->GetRelativePoint(1).x - r->GetRelativePoint(0).x;
+		s1y = r->GetRelativePoint(1).y - r->GetRelativePoint(0).y;
+
+		s2x = r->GetRelativePoint(2).x - r->GetRelativePoint(1).x;
+		s2y = r->GetRelativePoint(2).y - r->GetRelativePoint(1).y;
+
+		for (int i = 0; i < 4; ++i)
+		{
+			double px = (points[i].x + center.x) - (r->GetCenter().x + r->GetRelativePoint(0).x);
+			double py = (points[i].y + center.y) - (r->GetCenter().y + r->GetRelativePoint(0).y);
+
+			double dotProj1 = (s1x * px + s1y * py) / (r->GetLen() * r->GetLen());
+			double dotProj2 = (s2x * px + s2y * py) / (r->GetLen() * r->GetLen());
+
+			if ((dotProj1 > 0 && dotProj1 < 1) && (dotProj2 > 0 && dotProj2 < 1))
+			{
+				float distance = GetDistance({ 0, 0 }, { px, py });
+
+				double nx = px / distance;
+				double ny = py / distance;
+
+				float overlap;
+
+				if (dotProj1 > dotProj2)
+					overlap = distance / dotProj1 * (1.0f - dotProj1) / 2;
+				else
+					overlap = distance / dotProj2 * (1.0f - dotProj2) / 2;
+
+				double targetCX = r->GetCenter().x - overlap * nx;
+				double targetCY = r->GetCenter().y - overlap * ny;
+
+				r->SetCenter(targetCX, targetCY);
+
+				center.x += overlap * nx;
+				center.y += overlap * ny;
 
 				return;
 			}
